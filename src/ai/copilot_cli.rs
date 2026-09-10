@@ -36,6 +36,7 @@ use crate::ai::{AiProvider, AiRequest, AiResponse, AiUsage, ProviderCapabilities
 
 pub struct CopilotCliProvider {
     pub model: String,
+    pub timeout_secs: u64,
 }
 
 /// Returns the argv slice passed to `copilot` (excluding the prompt, which is
@@ -85,10 +86,13 @@ impl AiProvider for CopilotCliProvider {
             drop(stdin);
         }
 
-        let output = timeout(Duration::from_secs(600), child.wait_with_output())
-            .await
-            .map_err(|_| anyhow::anyhow!("copilot CLI timed out after 10 minutes"))?
-            .map_err(|e| anyhow::anyhow!("copilot CLI wait error: {}", e))?;
+        let output = timeout(
+            Duration::from_secs(self.timeout_secs),
+            child.wait_with_output(),
+        )
+        .await
+        .map_err(|_| anyhow::anyhow!("copilot CLI timed out after {} seconds", self.timeout_secs))?
+        .map_err(|e| anyhow::anyhow!("copilot CLI wait error: {}", e))?;
 
         if !output.stderr.is_empty() {
             let stderr = String::from_utf8_lossy(&output.stderr);
