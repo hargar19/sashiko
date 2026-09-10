@@ -1644,6 +1644,15 @@ async fn handle_local(
         let stdout = String::from_utf8_lossy(&output.stdout).to_string();
 
         if stdout.trim().is_empty() {
+            let stderr = String::from_utf8_lossy(&output.stderr).to_string();
+            let stderr = stderr.trim();
+            if !stderr.is_empty() {
+                return Err(anyhow::anyhow!(
+                    "Review subprocess produced no output (exit code: {}):\n{}",
+                    exit_code,
+                    stderr
+                ));
+            }
             return Err(anyhow::anyhow!(
                 "Review subprocess produced no output (exit code: {})",
                 exit_code

@@ -591,6 +591,7 @@ pub fn create_provider_from_ai(ai: &AiSettings) -> Result<Arc<dyn AiProvider>> {
         })),
         "copilot-cli" => Ok(Arc::new(copilot_cli::CopilotCliProvider {
             model: ai.model.clone(),
+            timeout_secs: ai.api_timeout_secs.max(600),
         })),
         "kiro-cli" => {
             let cfg = ai.kiro_cli.as_ref();

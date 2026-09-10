@@ -53,10 +53,11 @@ port = 119
 # dry_run = true
 
 [ai]
-provider = "gemini"
-model = "gemini-3.1-pro-preview"
-max_input_tokens = 900000
-max_interactions = 100
+provider = "copilot-cli"
+model = "gpt-6-astra"
+max_input_tokens = 90000
+max_interactions = 150
+api_timeout_secs = 1800
 temperature = 1.0
 
 # To use Claude API directly:
@@ -133,7 +134,7 @@ host = "::"
 port = 8080
 
 [git]
-repository_path = "third_party/linux"
+repository_path = "/home/hargar/linux"
 
 # Track custom remotes and attempt to apply patches on their branches
 # [[git.custom_remotes]]
